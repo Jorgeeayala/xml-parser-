@@ -1,0 +1,191 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@layer base {
+  body {
+    font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+  code, pre, .font-mono {
+    font-family: 'JetBrains Mono', monospace;
+  }
+}
+
+@media print {
+  html, body {
+    background: white !important;
+    color: black !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    height: auto !important;
+    overflow: visible !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  .print-only {
+    display: block !important;
+  }
+
+  #duo-printable-container {
+    transform: none !important;
+  }
+
+  /* Ink Saver for physical printing: remove heavy dark fills and keep high-contrast black on white */
+  .kude-printable-area,
+  .kude-printable-area div,
+  .kude-printable-area table,
+  .kude-printable-area thead,
+  .kude-printable-area tbody,
+  .kude-printable-area tfoot,
+  .kude-printable-area tr,
+  .kude-printable-area th,
+  .kude-printable-area td {
+    background-color: transparent !important;
+  }
+
+  .kude-printable-area .text-white {
+    color: #0f172a !important;
+  }
+
+  .kude-printable-area {
+    margin: 0 auto !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-shadow: none !important;
+    padding-top: 2px !important;
+  }
+
+  .duo-print-sheet {
+    page-break-after: always !important;
+    break-after: page !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    margin: 0 auto !important;
+    border: none !important;
+    box-shadow: none !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+    box-sizing: border-box !important;
+    width: 100% !important;
+    height: var(--duo-printable-height, 291mm) !important;
+    max-height: var(--duo-printable-height, 291mm) !important;
+    min-height: var(--duo-printable-height, 291mm) !important;
+    padding-top: var(--duo-dynamic-padding-y, 2.5mm) !important;
+    padding-bottom: var(--duo-dynamic-padding-y, 2.5mm) !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    gap: var(--duo-dynamic-gap, 4mm) !important;
+  }
+
+  .duo-print-sheet[data-papersize="oficio"] {
+    height: var(--duo-printable-height, 324.2mm) !important;
+    max-height: var(--duo-printable-height, 324.2mm) !important;
+    min-height: var(--duo-printable-height, 324.2mm) !important;
+  }
+
+  .duo-print-sheet[data-papersize="folio"] {
+    height: var(--duo-printable-height, 309mm) !important;
+    max-height: var(--duo-printable-height, 309mm) !important;
+    min-height: var(--duo-printable-height, 309mm) !important;
+  }
+
+  .single-print-sheet {
+    page-break-after: always !important;
+    break-after: page !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    margin: 0 auto !important;
+    border: none !important;
+    box-shadow: none !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: flex-start !important;
+    box-sizing: border-box !important;
+    width: 100% !important;
+    height: var(--duo-printable-height, 291mm) !important;
+    max-height: var(--duo-printable-height, 291mm) !important;
+    padding: 0 !important;
+  }
+
+  .single-print-sheet[data-papersize="oficio"] {
+    height: var(--duo-printable-height, 324.2mm) !important;
+    max-height: var(--duo-printable-height, 324.2mm) !important;
+  }
+
+  .single-print-sheet[data-papersize="folio"] {
+    height: var(--duo-printable-height, 309mm) !important;
+    max-height: var(--duo-printable-height, 309mm) !important;
+  }
+
+  .duo-half {
+    flex: 1 1 0% !important;
+    height: var(--duo-half-height, 145.5mm) !important;
+    max-height: var(--duo-half-height, 145.5mm) !important;
+    min-height: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: stretch !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
+  }
+
+  .duo-print-sheet[data-papersize="oficio"] .duo-half {
+    height: var(--duo-half-height, 162.1mm) !important;
+    max-height: var(--duo-half-height, 162.1mm) !important;
+  }
+
+  .duo-print-sheet[data-papersize="folio"] .duo-half {
+    height: var(--duo-half-height, 154.5mm) !important;
+    max-height: var(--duo-half-height, 154.5mm) !important;
+  }
+
+  .duo-cut-divider {
+    width: 100% !important;
+    flex-shrink: 0 !important;
+    margin: calc(var(--duo-dynamic-gap, 4mm) / 2) 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  .duo-print-sheet:last-child {
+    page-break-after: auto !important;
+    break-after: auto !important;
+  }
+
+  @page {
+    size: var(--print-page-size, A4 portrait);
+    margin: 3mm 5mm 3mm 5mm;
+  }
+}
+
+.duo-print-sheet {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.duo-half {
+  flex: 1 1 0%;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: stretch;
+  box-sizing: border-box;
+  overflow: hidden !important;
+}
+
+.duo-cut-divider {
+  width: 100%;
+  flex-shrink: 0;
+  box-sizing: border-box;
+}
+

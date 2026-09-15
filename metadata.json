@@ -1,0 +1,6 @@
+{
+  "name": "Visor KuDE & Analizador XML",
+  "description": "Analizador dinámico de archivos XML tributarios con generación de KuDE oficial, métricas en tiempo real, exportación a PDF e impresión directa.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
