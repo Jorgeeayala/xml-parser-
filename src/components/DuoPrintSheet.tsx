@@ -18,26 +18,29 @@ interface DuoPrintSheetProps {
  * for dual-invoice sheets based on paper format (A4, Oficio, Folio) and item density.
  */
 function calculateDuoMetrics(paperSize: PaperSizeType, targetItemRows: number) {
-  const config = PAPER_SIZES[paperSize] || PAPER_SIZES.a4;
+  const config = PAPER_SIZES[paperSize] || PAPER_SIZES.oficio;
   const totalHeightMm = config.heightMm;
   const totalWidthMm = config.widthMm;
 
-  // Printable margin: 3mm top + 3mm bottom
-  const pageMarginYMm = 3;
+  // Printable margin: 2mm top + 2mm bottom for maximum safety on Oficio
+  const pageMarginYMm = 2;
   const printableHeightMm = totalHeightMm - pageMarginYMm * 2;
-  const halfHeightMm = printableHeightMm / 2;
+
+  const dynamicPaddingYMm = Math.max(1, Math.min(3, printableHeightMm * 0.008));
+  const dynamicGapMm = Math.max(2, Math.min(5, printableHeightMm * 0.012));
+  const dividerHeightMm = 1.5;
+
+  const reservedMm = dynamicPaddingYMm * 2 + dynamicGapMm * 2 + dividerHeightMm;
+  const halfHeightMm = Math.max(20, (printableHeightMm - reservedMm) / 2);
 
   // Approximate height of compact KuDE invoice:
-  // Base fixed elements (~96mm) + table rows (~4.6mm each)
-  const estimatedInvoiceHeightMm = Math.min(138, 96 + Math.max(targetItemRows, 1) * 4.6);
+  // Base fixed elements (~96mm) + table rows (~4.6mm each), nunca más que
+  // la mitad real disponible (antes el cap era un valor fijo de 138mm que
+  // no se ajustaba a hojas más chicas ni dejaba margen de seguridad).
+  const estimatedInvoiceHeightMm = Math.min(halfHeightMm, 96 + Math.max(targetItemRows, 1) * 4.6);
 
-  // Remaining space inside each 50% half of the sheet
+  // Remaining space inside each half, una vez descontada la factura estimada
   const remainingHalfMm = Math.max(2, halfHeightMm - estimatedInvoiceHeightMm);
-
-  // Dynamic vertical gap between halves and outer padding calculated from remaining space
-  // A4 has ~34mm free per half, Folio ~43mm, Oficio ~51mm
-  const dynamicPaddingYMm = Math.max(2, Math.min(7, remainingHalfMm * 0.16));
-  const dynamicGapMm = Math.max(3, Math.min(14, remainingHalfMm * 0.28));
 
   return {
     totalHeightMm,
@@ -46,6 +49,7 @@ function calculateDuoMetrics(paperSize: PaperSizeType, targetItemRows: number) {
     halfHeightMm,
     estimatedInvoiceHeightMm,
     remainingHalfMm,
+    reservedMm: Number(reservedMm.toFixed(2)),
     dynamicPaddingYMm: Number(dynamicPaddingYMm.toFixed(2)),
     dynamicGapMm: Number(dynamicGapMm.toFixed(2)),
     aspectRatio: `${totalWidthMm} / ${totalHeightMm}`,
@@ -167,7 +171,7 @@ export const DuoPrintSheet: React.FC<DuoPrintSheetProps> = ({
           <div
             className="duo-cut-divider select-none relative flex items-center justify-center shrink-0 w-full"
             style={{
-              margin: `${metrics.dynamicGapMm / 2}mm 0`,
+              margin: '0',
             }}
           >
             <div className="w-full border-t border-dashed border-slate-300 dark:border-slate-600 print:border-slate-400" />
@@ -315,7 +319,7 @@ export const DuoPrintSheet: React.FC<DuoPrintSheetProps> = ({
           <div
             className="duo-cut-divider select-none relative flex items-center justify-center shrink-0 w-full"
             style={{
-              margin: `${metrics.dynamicGapMm / 2}mm 0`,
+              margin: '0',
             }}
           >
             <div className="w-full border-t border-dashed border-slate-300 dark:border-slate-600 print:border-slate-400" />
@@ -389,7 +393,7 @@ export const DuoPrintSheet: React.FC<DuoPrintSheetProps> = ({
           <div
             className="duo-cut-divider select-none relative flex items-center justify-center shrink-0 w-full"
             style={{
-              margin: `${metrics.dynamicGapMm / 2}mm 0`,
+              margin: '0',
             }}
           >
             <div className="w-full border-t border-dashed border-slate-300 dark:border-slate-600 print:border-slate-400" />
@@ -449,5 +453,3 @@ export const DuoPrintSheet: React.FC<DuoPrintSheetProps> = ({
     </div>
   );
 };
-
-

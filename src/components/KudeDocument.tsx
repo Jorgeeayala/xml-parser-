@@ -54,7 +54,9 @@ export const KudeDocument: React.FC<KudeDocumentProps> = ({
   };
 
   // Harmonize empty padding rows for symmetrical visual balance
-  const currentItemCount = doc.items?.length || 0;
+  const itemCount = doc.items?.length || 0;
+  const currentItemCount = itemCount;
+  const dynamicScale = compact && itemCount > 10 ? Math.max(0.55, 1 - (itemCount - 10) * 0.018) : 1;
   const desiredRows = targetItemRows !== undefined
     ? Math.max(currentItemCount, targetItemRows)
     : (!compact && currentItemCount < 3 ? 3 : currentItemCount);
@@ -69,12 +71,18 @@ export const KudeDocument: React.FC<KudeDocumentProps> = ({
       style={{
         width: '100%',
         maxWidth: '800px',
+        height: compact ? '100%' : 'auto',
         minHeight: compact ? '100%' : 'auto',
-        padding: compact ? '4px 6px' : '18px 20px',
-        fontSize: compact ? '8.5px' : '11px',
-        lineHeight: compact ? 1.18 : 1.32,
+        maxHeight: compact ? '100%' : 'none',
+        padding: compact ? '2px 4px' : '18px 20px',
+        fontSize: compact ? '7px' : '11px',
+        lineHeight: compact ? 1.1 : 1.32,
         boxShadow: compact ? 'none' : '0 4px 20px -2px rgba(0, 0, 0, 0.08)',
         border: compact ? '1px solid #cbd5e1' : '1px solid #e2e8f0',
+        boxSizing: 'border-box',
+        overflow: compact ? 'hidden' : 'visible',
+        transform: compact && itemCount > 10 ? `scale(${dynamicScale})` : 'none',
+        transformOrigin: 'top center',
       }}
     >
       {/* Etiqueta opcional de copia (Original / Duplicado) */}

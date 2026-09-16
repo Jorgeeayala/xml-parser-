@@ -65,7 +65,7 @@
     break-after: page !important;
     page-break-inside: avoid !important;
     break-inside: avoid !important;
-    margin: 0 auto !important;
+    margin: 0 !important;
     border: none !important;
     box-shadow: none !important;
     display: flex !important;
@@ -73,26 +73,24 @@
     justify-content: space-between !important;
     box-sizing: border-box !important;
     width: 100% !important;
-    height: var(--duo-printable-height, 291mm) !important;
-    max-height: var(--duo-printable-height, 291mm) !important;
-    min-height: var(--duo-printable-height, 291mm) !important;
-    padding-top: var(--duo-dynamic-padding-y, 2.5mm) !important;
-    padding-bottom: var(--duo-dynamic-padding-y, 2.5mm) !important;
-    padding-left: 0 !important;
-    padding-right: 0 !important;
-    gap: var(--duo-dynamic-gap, 4mm) !important;
+    height: 297mm !important;
+    max-height: 297mm !important;
+    min-height: 297mm !important;
+    padding: 2mm 3mm !important;
+    gap: 2mm !important;
+    overflow: hidden !important;
   }
 
   .duo-print-sheet[data-papersize="oficio"] {
-    height: var(--duo-printable-height, 324.2mm) !important;
-    max-height: var(--duo-printable-height, 324.2mm) !important;
-    min-height: var(--duo-printable-height, 324.2mm) !important;
+    height: 330.2mm !important;
+    max-height: 330.2mm !important;
+    min-height: 330.2mm !important;
   }
 
   .duo-print-sheet[data-papersize="folio"] {
-    height: var(--duo-printable-height, 309mm) !important;
-    max-height: var(--duo-printable-height, 309mm) !important;
-    min-height: var(--duo-printable-height, 309mm) !important;
+    height: 330mm !important;
+    max-height: 330mm !important;
+    min-height: 330mm !important;
   }
 
   .single-print-sheet {
@@ -100,7 +98,7 @@
     break-after: page !important;
     page-break-inside: avoid !important;
     break-inside: avoid !important;
-    margin: 0 auto !important;
+    margin: 0 !important;
     border: none !important;
     box-shadow: none !important;
     display: flex !important;
@@ -108,25 +106,25 @@
     justify-content: flex-start !important;
     box-sizing: border-box !important;
     width: 100% !important;
-    height: var(--duo-printable-height, 291mm) !important;
-    max-height: var(--duo-printable-height, 291mm) !important;
-    padding: 0 !important;
+    height: 297mm !important;
+    max-height: 297mm !important;
+    padding: 2mm 3mm !important;
   }
 
   .single-print-sheet[data-papersize="oficio"] {
-    height: var(--duo-printable-height, 324.2mm) !important;
-    max-height: var(--duo-printable-height, 324.2mm) !important;
+    height: 330.2mm !important;
+    max-height: 330.2mm !important;
   }
 
   .single-print-sheet[data-papersize="folio"] {
-    height: var(--duo-printable-height, 309mm) !important;
-    max-height: var(--duo-printable-height, 309mm) !important;
+    height: 330mm !important;
+    max-height: 330mm !important;
   }
 
   .duo-half {
-    flex: 1 1 0% !important;
-    height: var(--duo-half-height, 145.5mm) !important;
-    max-height: var(--duo-half-height, 145.5mm) !important;
+    flex-grow: 1 !important;
+    flex-shrink: 1 !important;
+    flex-basis: 0% !important;
     min-height: 0 !important;
     display: flex !important;
     flex-direction: column !important;
@@ -137,19 +135,17 @@
   }
 
   .duo-print-sheet[data-papersize="oficio"] .duo-half {
-    height: var(--duo-half-height, 162.1mm) !important;
-    max-height: var(--duo-half-height, 162.1mm) !important;
+    flex-grow: 1 !important;
   }
 
   .duo-print-sheet[data-papersize="folio"] .duo-half {
-    height: var(--duo-half-height, 154.5mm) !important;
-    max-height: var(--duo-half-height, 154.5mm) !important;
+    flex-grow: 1 !important;
   }
 
   .duo-cut-divider {
     width: 100% !important;
     flex-shrink: 0 !important;
-    margin: calc(var(--duo-dynamic-gap, 4mm) / 2) 0 !important;
+    margin: 0 !important;
     box-sizing: border-box !important;
   }
 
@@ -160,7 +156,7 @@
 
   @page {
     size: var(--print-page-size, A4 portrait);
-    margin: 3mm 5mm 3mm 5mm;
+    margin: 0 !important;
   }
 }
 
@@ -188,4 +184,3 @@
   flex-shrink: 0;
   box-sizing: border-box;
 }
-
