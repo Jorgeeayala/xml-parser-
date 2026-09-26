@@ -11,6 +11,16 @@
   }
 }
 
+/* Neutralize dark mode styles on print containers in UI and print preview */
+.dark .duo-print-sheet,
+.dark .single-print-sheet,
+.dark .duo-half {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+
 @media print {
   html, body {
     background: white !important;
@@ -21,6 +31,19 @@
     overflow: visible !important;
     margin: 0 !important;
     padding: 0 !important;
+  }
+
+  /* Neutralize dark mode styles during print to prevent black margins/borders */
+  .dark,
+  .dark html,
+  .dark body,
+  .dark .duo-print-sheet,
+  .dark .single-print-sheet,
+  .dark .kude-printable-area {
+    background-color: white !important;
+    background: white !important;
+    color: black !important;
+    border-color: transparent !important;
   }
 
   .no-print {
@@ -58,6 +81,7 @@
     max-width: 100% !important;
     box-shadow: none !important;
     padding-top: 2px !important;
+    background-color: white !important;
   }
 
   .duo-print-sheet {
@@ -68,9 +92,8 @@
     margin: 0 !important;
     border: none !important;
     box-shadow: none !important;
-    display: flex !important;
-    flex-direction: column !important;
-    justify-content: space-between !important;
+    display: grid !important;
+    grid-template-rows: minmax(0, 1fr) auto minmax(0, 1fr) !important;
     box-sizing: border-box !important;
     width: 100% !important;
     height: 297mm !important;
@@ -79,6 +102,7 @@
     padding: 2mm 3mm !important;
     gap: 2mm !important;
     overflow: hidden !important;
+    background-color: white !important;
   }
 
   .duo-print-sheet[data-papersize="oficio"] {
@@ -96,8 +120,6 @@
   .single-print-sheet {
     page-break-after: always !important;
     break-after: page !important;
-    page-break-inside: avoid !important;
-    break-inside: avoid !important;
     margin: 0 !important;
     border: none !important;
     box-shadow: none !important;
@@ -106,25 +128,29 @@
     justify-content: flex-start !important;
     box-sizing: border-box !important;
     width: 100% !important;
-    height: 297mm !important;
-    max-height: 297mm !important;
+    min-height: 297mm !important;
     padding: 2mm 3mm !important;
+    background-color: white !important;
   }
 
   .single-print-sheet[data-papersize="oficio"] {
-    height: 330.2mm !important;
-    max-height: 330.2mm !important;
+    min-height: 330.2mm !important;
   }
 
   .single-print-sheet[data-papersize="folio"] {
-    height: 330mm !important;
-    max-height: 330mm !important;
+    min-height: 330mm !important;
+  }
+
+  .single-print-sheet .kude-printable-area table thead {
+    display: table-header-group !important;
+  }
+
+  .single-print-sheet .kude-printable-area table tbody tr {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
   }
 
   .duo-half {
-    flex-grow: 1 !important;
-    flex-shrink: 1 !important;
-    flex-basis: 0% !important;
     min-height: 0 !important;
     display: flex !important;
     flex-direction: column !important;
@@ -132,14 +158,24 @@
     align-items: stretch !important;
     box-sizing: border-box !important;
     overflow: hidden !important;
+    background-color: white !important;
+    border: none !important;
+    box-shadow: none !important;
+  }
+
+  /* Empty duo-half cells: completely blank, no borders, backgrounds, or shadows */
+  .duo-half:empty {
+    background-color: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
   }
 
   .duo-print-sheet[data-papersize="oficio"] .duo-half {
-    flex-grow: 1 !important;
+    min-height: 0 !important;
   }
 
   .duo-print-sheet[data-papersize="folio"] .duo-half {
-    flex-grow: 1 !important;
+    min-height: 0 !important;
   }
 
   .duo-cut-divider {
@@ -161,11 +197,11 @@
 }
 
 .duo-print-sheet {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto minmax(0, 1fr);
   box-sizing: border-box;
   overflow: hidden;
+  background-color: #ffffff;
 }
 
 .duo-half {
@@ -177,6 +213,16 @@
   align-items: stretch;
   box-sizing: border-box;
   overflow: hidden !important;
+  background-color: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+/* Empty duo-half cells in base view */
+.duo-half:empty {
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
 }
 
 .duo-cut-divider {
@@ -184,3 +230,4 @@
   flex-shrink: 0;
   box-sizing: border-box;
 }
+

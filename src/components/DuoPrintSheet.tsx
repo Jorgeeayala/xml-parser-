@@ -325,19 +325,14 @@ export const DuoPrintSheet: React.FC<DuoPrintSheetProps> = ({
             <div className="w-full border-t border-dashed border-slate-300 dark:border-slate-600 print:border-slate-400" />
           </div>
 
-          {/* Mitad Inferior Limpia para Corte */}
+          {/* Mitad Inferior en Blanco */}
           <div
-            className="duo-half duo-half-bottom flex-1 flex flex-col items-center justify-center min-h-0 overflow-hidden text-slate-400 dark:text-slate-500"
+            className="duo-half duo-half-bottom flex-1 flex flex-col items-center justify-center min-h-0 overflow-hidden"
             style={{
               maxHeight: `${metrics.halfHeightMm}mm`,
               overflow: 'hidden',
             }}
-          >
-            <div className="no-print flex items-center gap-1.5 px-3 py-1.5 border border-dashed border-slate-300 dark:border-slate-700 rounded-md text-[11px] font-medium">
-              <Scissors className="w-3.5 h-3.5 text-slate-400" />
-              <span>Mitad inferior libre para corte con guillotina ({paperConfig.shortLabel})</span>
-            </div>
-          </div>
+          />
         </div>
       )}
 
@@ -422,18 +417,18 @@ export const DuoPrintSheet: React.FC<DuoPrintSheetProps> = ({
       {singleLayout === 'full' && (
         <div
           id={page.id}
-          className="single-print-sheet bg-white border border-slate-300 dark:border-slate-700 shadow-xs mx-auto my-3 print:my-0 print:border-none print:shadow-none transition-all overflow-hidden flex flex-col justify-start"
+          className="single-print-sheet bg-white border border-slate-300 dark:border-slate-700 shadow-xs mx-auto my-3 print:my-0 print:border-none print:shadow-none transition-all flex flex-col justify-start"
           style={{
             width: '100%',
             maxWidth: '800px',
             boxSizing: 'border-box',
-            overflow: 'hidden',
             pageBreakAfter: 'always',
             breakAfter: 'page',
-            pageBreakInside: 'avoid',
-            breakInside: 'avoid',
+            // Sin aspectRatio ni overflow:hidden ni breakInside:'avoid' acá:
+            // una factura con muchos ítems es más alta que una hoja física y
+            // necesita poder crecer/continuar en la página siguiente, tanto
+            // en la vista previa como al imprimir.
             padding: '8px 12px',
-            aspectRatio: `${paperConfig.widthMm} / ${paperConfig.heightMm}`,
             minHeight: `calc(800px * (${paperConfig.heightMm} / ${paperConfig.widthMm}))`,
             ['--duo-paper-height' as string]: `${paperConfig.heightMm}mm`,
             ['--duo-paper-width' as string]: `${paperConfig.widthMm}mm`,

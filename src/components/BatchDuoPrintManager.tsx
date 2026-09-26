@@ -57,6 +57,7 @@ export const BatchDuoPrintManager: React.FC<BatchDuoPrintManagerProps> = ({
 }) => {
   const [distributionMode, setDistributionMode] = useState<BatchDistributionMode>('duo-auto');
   const [singleLayoutDefault, setSingleLayoutDefault] = useState<SingleSheetLayout>('half-top');
+  const [showSecondSlotForSingle, setShowSecondSlotForSingle] = useState<boolean>(true);
   const [groupBy, setGroupBy] = useState<'affinity' | 'date' | 'sequence' | 'order'>('affinity');
   const [selectedSheetIndex, setSelectedSheetIndex] = useState<number | null>(null);
   const [zoomScale, setZoomScale] = useState<number>(1);
@@ -104,11 +105,32 @@ export const BatchDuoPrintManager: React.FC<BatchDuoPrintManagerProps> = ({
   // Change default single layout
   const handleSingleLayoutDefaultChange = (layout: SingleSheetLayout) => {
     setSingleLayoutDefault(layout);
+    if (layout === 'half-top') {
+      setShowSecondSlotForSingle(true);
+    } else if (layout === 'full') {
+      setShowSecondSlotForSingle(false);
+    }
     if (customPages) {
       setCustomPages((prev) =>
         prev
           ? prev.map((p) =>
               p.type === 'single' ? { ...p, singleLayout: layout } : p
+            )
+          : null
+      );
+    }
+  };
+
+  // Toggle second invoice slot visibility for single documents
+  const handleToggleSecondSlot = (checked: boolean) => {
+    setShowSecondSlotForSingle(checked);
+    const newLayout: SingleSheetLayout = checked ? 'half-top' : 'full';
+    setSingleLayoutDefault(newLayout);
+    if (customPages) {
+      setCustomPages((prev) =>
+        prev
+          ? prev.map((p) =>
+              p.type === 'single' ? { ...p, singleLayout: newLayout } : p
             )
           : null
       );
@@ -392,20 +414,41 @@ export const BatchDuoPrintManager: React.FC<BatchDuoPrintManagerProps> = ({
 
             {/* 2. Selector de Disposición de Facturas Solas (Huérfanas / Individuales) */}
             {distributionMode !== 'duplicate' && (
-              <div className="flex items-center gap-1.5 bg-slate-50 dark:bg-slate-800 px-2.5 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700">
-                <Scissors className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
-                <span className="font-semibold text-slate-800 dark:text-slate-200">Factura sola va en:</span>
-                <select
-                  id="select-single-layout"
-                  value={singleLayoutDefault}
-                  onChange={(e) => handleSingleLayoutDefaultChange(e.target.value as SingleSheetLayout)}
-                  className="bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded px-2 py-1 text-xs text-slate-900 dark:text-white font-bold focus:ring-1 focus:ring-slate-400 focus:outline-hidden"
-                  title="Define cómo se dispone la 3ra factura o comprobantes que van solos en su hoja"
-                >
-                  <option value="half-top">Media Hoja Superior (50% - Con guía de corte)</option>
-                  <option value="duplicate">Original + Duplicado (Aprovecha 100% de la hoja)</option>
-                  <option value="full">Hoja Completa (Estándar KuDE tradicional)</option>
-                </select>
+              <div className="flex flex-wrap items-center gap-2 bg-slate-50 dark:bg-slate-800 px-2.5 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700">
+                <div className="flex items-center gap-1.5">
+                  <Scissors className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+                  <span className="font-semibold text-slate-800 dark:text-slate-200">Factura sola va en:</span>
+                  <select
+                    id="select-single-layout"
+                    value={singleLayoutDefault}
+                    onChange={(e) => handleSingleLayoutDefaultChange(e.target.value as SingleSheetLayout)}
+                    className="bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded px-2 py-1 text-xs text-slate-900 dark:text-white font-bold focus:ring-1 focus:ring-slate-400 focus:outline-hidden"
+                    title="Define cómo se dispone la 3ra factura o comprobantes que van solos en su hoja"
+                  >
+                    <option value="half-top">Media Hoja Superior (50% - Con guía de corte)</option>
+                    <option value="duplicate">Original + Duplicado (Aprovecha 100% de la hoja)</option>
+                    <option value="full">Hoja Completa (Estándar KuDE tradicional)</option>
+                  </select>
+                </div>
+
+                {singleLayoutDefault !== 'duplicate' && (
+                  <div className="flex items-center gap-1.5 pl-2 border-l border-slate-200 dark:border-slate-700">
+                    <span className="text-[11px] font-semibold text-slate-700 dark:text-slate-300">Segundo espacio:</span>
+                    <label className="relative inline-flex items-center cursor-pointer select-none" title="Mostrar u ocultar el segundo espacio / ranura de factura cuando solo hay un documento">
+                      <input
+                        type="checkbox"
+                        checked={showSecondSlotForSingle}
+                        onChange={(e) => handleToggleSecondSlot(e.target.checked)}
+                        className="sr-only peer"
+                        id="toggle-second-slot"
+                      />
+                      <div className="w-7 h-3.5 bg-slate-300 peer-focus:outline-hidden rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-2.5 after:w-2.5 after:transition-all dark:border-slate-600 peer-checked:bg-emerald-600"></div>
+                      <span className="ml-1 text-[11px] font-bold text-slate-700 dark:text-slate-300">
+                        {showSecondSlotForSingle ? 'Visible (Reserva)' : 'Oculto (Simple)'}
+                      </span>
+                    </label>
+                  </div>
+                )}
               </div>
             )}
 

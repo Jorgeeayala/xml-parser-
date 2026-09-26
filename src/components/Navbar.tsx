@@ -171,11 +171,11 @@ export const Navbar: React.FC<NavbarProps> = ({
                 onClick={onPrint}
                 disabled={!activeDoc}
                 className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 border border-slate-300 dark:border-slate-700 rounded-lg shadow-2xs transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                title="Opciones de impresión o diálogo nativo"
+                title="Imprimir todos los comprobantes cargados en lote o diálogo nativo"
               >
                 <Printer className="w-4 h-4 text-slate-600 dark:text-slate-400" />
                 <span className="hidden sm:inline">
-                  {activeTab === 'batch-duo' ? 'Imprimir Dúo' : 'Imprimir'}
+                  {docsCount > 1 ? 'Imprimir Todo' : (activeTab === 'batch-duo' ? 'Imprimir Dúo' : 'Imprimir')}
                 </span>
               </button>
 

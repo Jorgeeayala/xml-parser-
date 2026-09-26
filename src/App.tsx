@@ -78,6 +78,17 @@ export default function App() {
     const config = PAPER_SIZES[paperSize] || PAPER_SIZES.oficio;
     document.documentElement.style.setProperty('--print-page-size', config.cssPageSize);
     localStorage.setItem('kude_paper_size', paperSize);
+
+    const styleId = 'dynamic-page-size-style';
+    let styleTag = document.getElementById(styleId) as HTMLStyleElement | null;
+    if (!styleTag) {
+      styleTag = document.createElement('style');
+      styleTag.id = styleId;
+      document.head.appendChild(styleTag);
+    } else {
+      document.head.appendChild(styleTag); // reinsertar al final para mantener prioridad
+    }
+    styleTag.textContent = `@page { size: ${config.cssPageSize} !important; margin: 0 !important; }`;
   }, [paperSize]);
 
   const activeDoc = documents.find((d) => d.id === selectedId) || documents[0] || null;
@@ -319,8 +330,10 @@ export default function App() {
   // Trigger browser print or open Print Assistant
   const handlePrint = () => {
     if (!activeDoc && documents.length === 0) return;
-    if (activeTab !== 'kude' && activeTab !== 'batch-duo') {
-      setActiveTab(documents.length > 1 ? 'batch-duo' : 'kude');
+    if (documents.length > 1) {
+      setActiveTab('batch-duo');
+    } else if (activeTab !== 'kude' && activeTab !== 'batch-duo') {
+      setActiveTab('kude');
     }
 
     const isInIframe = typeof window !== 'undefined' && window.self !== window.top;
